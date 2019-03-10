@@ -43,7 +43,6 @@ def normalize_text(text):
     return normText
 
 
-
 # Reads the corpus file by file and normalizes each file
 def read_corpus(dict, corpus):
     for i in dict:
@@ -59,12 +58,19 @@ def positional_index(tokens):
             d[t].append([docID] + [ind for ind, ele in enumerate(sub_l) if ele == t])
     return d
 
+
+# Prompt user for query
+def query_prompt():
+    query = input("Specify query: ")
+    print("Your query: ", query)
+    return query
+
 # Main function calls
 def main():  
-        corpus = "corpus"
-        dictionary = make_dictionary(corpus)
-        read_corpus(dictionary, corpus)
-       
+    corpus = "corpus"
+    dictionary = make_dictionary(corpus)
+    read_corpus(dictionary, corpus)
+    user_query = query_prompt()
 
 
 if __name__ == '__main__':
