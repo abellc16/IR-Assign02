@@ -17,9 +17,12 @@ import sys
 from nltk.stem import *
 from nltk.corpus import *
 import numpy
+from collections import Counter
+from collections import defaultdict
 
 
 stemmer = PorterStemmer()
+file = open("output.txt", 'w')
 
 # Extract tokens and identify vocabulary for the
 # dictionary
@@ -46,15 +49,25 @@ def read_corpus(dict, corpus):
     for i in dict:
         text = open(os.path.join(corpus, i)).read()
         words = normalize_text(text)
-        print(words)
+        file.write(str(positional_index(words)))
+
+# Creates positional index
+def positional_index(tokens):
+    d = defaultdict(list)
+    for docID, sub_l in enumerate(tokens):
+        for t in set(sub_l):
+            d[t].append([docID] + [ind for ind, ele in enumerate(sub_l) if ele == t])
+    return d
 
 # Main function calls
-def main():
-        print("start")
+def main():  
         corpus = "corpus"
         dictionary = make_dictionary(corpus)
         read_corpus(dictionary, corpus)
+       
 
 
 if __name__ == '__main__':
     main()
+
+file.close()
