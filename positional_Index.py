@@ -1,4 +1,4 @@
-# Authors:    Camby Abell, Tim Gwaltney, Jamie Rios
+ # Authors:    Camby Abell, Tim Gwaltney, Jamie Rios
 # Assignment: Programming Assignment 02 - Creating a postional index
 # Class:      CSCI 4130
 # Filename:   positional_Index.py
@@ -66,8 +66,8 @@ def query_prompt():
     return query
 
 # Main function calls
-def main():  
-    corpus = "corpus"
+def main():
+    corpus = sys.argv[1]
     dictionary = make_dictionary(corpus)
     read_corpus(dictionary, corpus)
     user_query = query_prompt()
