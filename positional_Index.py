@@ -28,6 +28,8 @@ file = open("output.txt", 'w')
 # dictionary
 def make_dictionary(corpus):
     new_dict = os.listdir(corpus)
+    for i in new_dict:
+        print(i, "\n")
     return new_dict
 
 
@@ -56,14 +58,14 @@ def createPositionalIndex(words, i):
     index = {}
     for idx, word in enumerate(words):
         if not word in index:
-            index[word] = [(word,idx)]
-        else: index[word].append((word,idx))
+            index[word] = [i,idx]
+        else: index[word].append((idx))
     return index
 
 
 # Main function calls
 def main():  
-        corpus = "corpus"
+        corpus = input("Input corpus name: ")
         dictionary = make_dictionary(corpus)
         read_corpus(dictionary, corpus)
        
