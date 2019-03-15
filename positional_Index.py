@@ -62,12 +62,18 @@ def createPositionalIndex(words, i):
         else: index[word].append((idx))
     return index
 
+# Prompt user for query
+def query_prompt():
+    query = input("Specify query: ")
+    print("Your query: ", query)
+    return query
 
 # Main function calls
 def main():  
         corpus = input("Input corpus name: ")
         dictionary = make_dictionary(corpus)
         read_corpus(dictionary, corpus)
+        user_query = query_prompt()
        
 
 if __name__ == '__main__':
