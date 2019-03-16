@@ -51,14 +51,20 @@ def dictionary(mydict,tokens):
 #if the dictionary term occurs in a text then its entry in
 #the postings list is 1 and it is 0 otherwise
 #docList is a list of documents with each index containing the terms of that document
-def postings_list(dictionaryTerm, listOfDocs):
-    postings_list = []
-    for i in range(len(listOfDocs)):
-        if dictionaryTerm not in listOfDocs[i]:
-            postings_list.append(0)
-        else:
-            postings_list.append(1)
-    return postings_list
+def postings_list(listOfTerms, listOfDocuments):
+    postingsMatrix = []
+    for term in listOfTerms: # number of rows
+        row = [] #each row is defined as an array
+        row.append(term)
+        for i in range(len(listOfDocuments)):
+            if term not in listOfDocuments[i]:
+                row.append(0)
+            else:
+                row.append(1)
+        postingsMatrix.append(row)
+    return postingsMatrix
+
+
 
 
 #Given a text corpus, develop a positional index. Process phrase and proximity
@@ -108,16 +114,13 @@ def main():
 
 
     ##create postings_list
-    for term in dictionaryTerms:
-        postings = postings_list(term,fileText)
+    ##the terms are listed in the matrix as index 0 of each row
+    postingsMatrix = postings_list(dictionaryTerms, fileText)
 
+    print(len(postingsMatrix))
 
-
-
-
-
-
-
+    for row in postingsMatrix:
+        print(row)
 
 
 
