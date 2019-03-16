@@ -1,10 +1,9 @@
-#
+
 #Author: Jamison Brown
 #Date: 3/5/19
 #Course: CSCI 4130
 #Instructor: Gudivada
 #
-
 from __future__ import division
 from __future__ import print_function
 import re
@@ -60,12 +59,12 @@ def postings_list(dictionaryTerm, listOfDocs):
         else:
             postings_list.append(1)
     return postings_list
-##function to build a postings list
-##given a dictionary, a word occurs in a document
-##if it is present in the dictionary and in the
+
 
 #Given a text corpus, develop a positional index. Process phrase and proximity
 #queries using the positional index.
+#def positional_Index(term, postings_list):
+
 def main():
 
     corpus = sys.argv[1]
@@ -107,20 +106,13 @@ def main():
     for k, v in wordDictionary.items():
         dictionaryTerms.append(k)
 
+
     ##create postings_list
     for term in dictionaryTerms:
         postings = postings_list(term,fileText)
 
-        print(f'{term} : {postings}')
 
-    # for terms in dictionaryTerms:
-    #     postings_list = []
-    #     for i in range(len(fileText)):
-    #         if terms not in fileText[i]:
-    #             postings_list.append(0)
-    #         else:
-    #             postings_list.append(1)
-    #     print(f'{terms}: {postings_list}')
+
 
 
 
