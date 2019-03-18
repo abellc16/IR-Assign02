@@ -8,10 +8,7 @@
 #
 # 1. When prompted to enter a corpus, enter 'corpus'
 # 2. You may then enter a single term search, such as 'east'
-# 3. Or you may enter a two term positional query, such as
-#    'east /3 carolina'. The '/3' will search for every
-#    instance of those two terms appearing within 3 positions
-#    of each other.
+#
 ###############################################################
 
 import math
@@ -27,7 +24,8 @@ from collections import defaultdict
 
 
 stemmer = PorterStemmer()
-file = open("output.txt", 'w')
+pl = open("PostingsList.txt", "w")
+piFile = open("Positional.txt", "w")
 
 
 # Takes a text as a parameter
@@ -40,14 +38,6 @@ def normalize_text(text):
     for token in text_norm:
         norm_text.append(stemmer.stem(token))
     return norm_text
-
-
-# Reads the corpus file by file and normalizes each file
-def read_corpus(dict, corpus):
-    for i in dict:
-        text = open(os.path.join(corpus, i)).read()
-        words = normalize_text(text)
-        file.write(str(create_positional_index(words, i)))
 
 
 # Creates positional index
@@ -63,7 +53,7 @@ def create_positional_index(words, i):
 # Prompt user for query
 def query_prompt():
     query = input("Specify query: ")
-    print("Your query: ", query)
+   # print("Your query: ", query)
     return query
 
 
@@ -94,7 +84,7 @@ def postings_list(terms, docs):
 def single_term_search(query, dir, postings):
     count = 0
     n_query = stemmer.stem(query)
-    print(n_query)
+    print("The documents that contain your query are:")
 
     for item in postings:
         if n_query == item[0]:
@@ -104,12 +94,12 @@ def single_term_search(query, dir, postings):
                     count += 1
 
     if count == 0:
-        print("No Matches")
+        print("No Matches Found")
 
 
 # Main function calls
 def main():  
-    corpus = input("Input corpus name ('corpus'): ")
+    corpus = input("Input corpus name: ")
 
     # create a directory from the corpus
     directory = os.listdir(corpus)
@@ -134,9 +124,9 @@ def main():
     # Process to normalize text
     for i in range(len(file_text)):
         file_text[i] = normalize_text(file_text[i])
-        # file_text[i] = strip_punct(file_text[i])
-        # file_text[i] = tokens(file_text[i])
-        file_text[i] = [stemmer.stem(words) for words in file_text[i]]
+        pi = create_positional_index(file_text[i], directory[i])
+        piFile.write(str(pi))
+
 
     # Take stemmed tokens to build dict
     word_dictionary = {}
@@ -150,11 +140,10 @@ def main():
     # Construct postings list
     postings_matrix = postings_list(dictionary_terms, file_text)
 
-    print(len(postings_matrix))
-
     # Print postings list for debugging
     for row in postings_matrix:
-        print(row)
+        pl.write(str(row))
+        pl.write('\n')
 
     user_query = query_prompt()
        
@@ -163,4 +152,5 @@ def main():
 if __name__ == '__main__':
     main()
 
-file.close()
+pl.close()
+piFile.close()
