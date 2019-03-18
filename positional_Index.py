@@ -7,7 +7,7 @@
 #                HOW TO RUN THE PROGRAM:
 #
 # 1. When prompted to enter a corpus, enter 'corpus'
-# 2. You may then enter a single term seach, such as 'east'
+# 2. You may then enter a single term search, such as 'east'
 # 3. Or you may enter a two term positional query, such as
 #    'east /3 carolina'. The '/3' will search for every
 #    instance of those two terms appearing within 3 positions
@@ -28,15 +28,6 @@ from collections import defaultdict
 
 stemmer = PorterStemmer()
 file = open("output.txt", 'w')
-
-
-# Extract tokens and identify vocabulary for the
-# dictionary
-def make_dictionary(corpus):
-    new_dict = os.listdir(corpus)
-    for i in new_dict:
-        print(i, "\n")
-    return new_dict
 
 
 # Takes a text as a parameter
@@ -65,7 +56,7 @@ def create_positional_index(words, i):
     for idx, word in enumerate(words):
         if not word in index:
             index[word] = [i,idx]
-        else: index[word].append((idx))
+        else: index[word].append(idx)
     return index
 
 
@@ -74,22 +65,6 @@ def query_prompt():
     query = input("Specify query: ")
     print("Your query: ", query)
     return query
-
-
-# Make a text lowercase
-def to_lower(text):
-    return text.lower()
-
-
-# Strip punctuation from text
-def strip_punct(text):
-    translator = str.maketrans('','',string.punctuation)
-    return text.translate(translator)
-
-
-# Extract tokens from text
-def tokens(text):
-    return re.findall('[a-z]+', text.lower())
 
 
 def dictionary(mydict,tokens):
@@ -107,7 +82,8 @@ def postings_list(terms, docs):
     for term in terms:
         row = []
         row.append(term)
-        for i in range(len(docs[i])):
+        for i in range(len(docs)):
+            if term not in docs[i]:
                 row.append(0)
             else:
                 row.append(1)
@@ -115,10 +91,25 @@ def postings_list(terms, docs):
     return postingsMatrix
 
 
+def single_term_search(query, dir, postings):
+    count = 0
+    n_query = stemmer.stem(query)
+    print(n_query)
+
+    for item in postings:
+        if n_query == item[0]:
+            for x in range(1, len(item)):
+                if item[x] == 1:
+                    print(dir[x - 1])
+                    count += 1
+
+    if count == 0:
+        print("No Matches")
+
+
 # Main function calls
 def main():  
     corpus = input("Input corpus name ('corpus'): ")
-    stop_words = set(stopwords.words('english'))
 
     # create a directory from the corpus
     directory = os.listdir(corpus)
@@ -127,24 +118,24 @@ def main():
     directory.sort()
 
     # List of the names of the documents in the corpus
-    rawFileNames = []  # list of raw filenames
+    raw_file_names = []  # list of raw filenames
 
     for file in directory:
         filename = open(os.path.join(corpus, file), 'r')
-        rawFileNames.append(filename)
+        raw_file_names.append(filename)
 
     # List of document texts, each doc is represented by
     # an index.
     file_text = []
 
-    for file in rawFileNames:
+    for file in raw_file_names:
         file_text.append(file.read())
 
     # Process to normalize text
     for i in range(len(file_text)):
-        file_text[i] = to_lower(file_text[i])
-        file_text[i] = strip_punct(file_text[i])
-        file_text[i] = tokens(file_text[i])
+        file_text[i] = normalize_text(file_text[i])
+        # file_text[i] = strip_punct(file_text[i])
+        # file_text[i] = tokens(file_text[i])
         file_text[i] = [stemmer.stem(words) for words in file_text[i]]
 
     # Take stemmed tokens to build dict
@@ -162,11 +153,12 @@ def main():
     print(len(postings_matrix))
 
     # Print postings list for debugging
-    # for row in postings_matrix:
-    #     print(row)
+    for row in postings_matrix:
+        print(row)
 
     user_query = query_prompt()
        
+    single_term_search(user_query, directory, postings_matrix)
 
 if __name__ == '__main__':
     main()
