@@ -3,11 +3,16 @@
 # Class:      CSCI 4130
 # Filename:   positional_Index.py
 
-################################################
+###############################################################
 # HOW TO RUN THE PROGRAM:
 #
-# [INSERT HOW TO RUN PROGRAM HERE.]
-################################################
+# 1. When prompted to enter a corpus, enter 'corpus'
+# 2. You may then enter a single term seach, such as 'east'
+# 3. Or you may enter a two term positional query, such as
+#    'east /3 carolina'. The '/3' will search for every
+#    instance of those two terms appearing within 3 positions
+#    of each other.
+###############################################################
 
 import math
 import os
@@ -23,6 +28,7 @@ from collections import defaultdict
 
 stemmer = PorterStemmer()
 file = open("output.txt", 'w')
+
 
 # Extract tokens and identify vocabulary for the
 # dictionary
@@ -45,13 +51,13 @@ def normalize_text(text):
     return normText
 
 
-
 # Reads the corpus file by file and normalizes each file
 def read_corpus(dict, corpus):
     for i in dict:
         text = open(os.path.join(corpus, i)).read()
         words = normalize_text(text)
         file.write(str(createPositionalIndex(words, i)))
+
 
 # Creates positional index
 def createPositionalIndex(words, i):
@@ -62,15 +68,17 @@ def createPositionalIndex(words, i):
         else: index[word].append((idx))
     return index
 
+
 # Prompt user for query
 def query_prompt():
     query = input("Specify query: ")
     print("Your query: ", query)
     return query
 
+
 # Main function calls
 def main():  
-        corpus = input("Input corpus name: ")
+        corpus = input("Input corpus name ('corpus'): ")
         dictionary = make_dictionary(corpus)
         read_corpus(dictionary, corpus)
         user_query = query_prompt()
