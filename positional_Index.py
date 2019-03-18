@@ -161,6 +161,10 @@ def main():
 
     print(len(postings_matrix))
 
+    # Print postings list for debugging
+    # for row in postings_matrix:
+    #     print(row)
+
     user_query = query_prompt()
        
 
